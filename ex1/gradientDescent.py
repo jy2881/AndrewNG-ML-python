@@ -2,6 +2,7 @@
 __author__ = 'Jy2881'
 
 import numpy as np
+# noinspection PyUnresolvedReferences
 import computeCost
 
 def GradientDescent(X,y,theta,alpha,num_iters):

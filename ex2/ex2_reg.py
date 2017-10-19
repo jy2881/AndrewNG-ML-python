@@ -9,7 +9,7 @@ import plotDecisionBoundary
 import mapFeature
 import costFunctionReg
 
-data = np.loadtxt(r"E:\ml\exercise\w3\python\ex2data2.txt",delimiter = ",")
+data = np.loadtxt("ex2data2.txt",delimiter = ",")
 X = data[:, 0:2]
 y = data[:, 2]
 

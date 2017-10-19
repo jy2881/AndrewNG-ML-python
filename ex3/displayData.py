@@ -24,17 +24,15 @@ def displayData(x, example_width):
     # 现在已经创建了一个列表，列表中的每一个对象都是一张图片，已经转置好了，我们下面开始融合他们，先一行一行地来，然后把所有行融合在一起
     row_list = [0]*display_rows
 
-    for r in range(0,display_cols):
+    for r in range(0,display_rows):
         row_list[r] = blank_list[r*display_cols]
 
-        for c in range(1,display_cols):
+        for c in range(0,display_cols):
             row_list[r] = np.c_[(row_list[r],blank_list[r*display_cols+c])]
-            #row_list[r] = np.c_[(row_list[r],-np.ones([example_height]).reshape(example_height,1))]
         if r ==0:
             display_array = row_list[0]
         if r >=1:
             display_array = np.r_[(display_array,row_list[r])]
-            #display_array = np.r_[(display_array,-np.ones([example_width*display_cols]).reshape(example_width*display_cols,1))]
 
     # 开始画图了
     f1 = plt.figure(1)

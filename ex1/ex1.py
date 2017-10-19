@@ -7,6 +7,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 # ==================== Part 1: Basic Function ====================
 # Complete warmUpExercise.m
+# noinspection PyUnresolvedReferences
 import warmUpExercise
 print('Running warmUpExercise ... ')
 print('5x5 Identity Matrix: ')
@@ -32,6 +33,7 @@ X = np.vstack((one,X)) # 创建一个2*m的数组
 theta = np.zeros((2,1)) # 创建一个2*1的数组
 
 # 一些梯度下降参数设置
+# noinspection PyUnresolvedReferences
 import computeCost
 iterations = 1500
 alpha = 0.01
@@ -51,6 +53,7 @@ print('Expected cost value (approx) 54.24')
 input('Program paused. Press enter to continue.')
 print('Running Gradient Descent ...')
 
+# noinspection PyUnresolvedReferences
 import gradientDescent
 theta = gradientDescent.GradientDescent(X, y, theta, alpha, iterations)
 
@@ -75,7 +78,9 @@ print('For population = 70,000, we predict a profit of %d'%predict2)
 # ============= Part 4: Visualizing J(theta_0, theta_1) =============
 print('Visualizing J(theta_0, theta_1) ...')
 # Grid over which we will calculate J
+# noinspection PyUnresolvedReferences
 theta0_vals = np.arange(-10,10,0.2)
+# noinspection PyUnresolvedReferences
 theta1_vals = np.arange(-1, 4, 0.05)
 J_vals = np.zeros((len(theta0_vals),len(theta1_vals)))
 

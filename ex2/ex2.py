@@ -7,7 +7,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import scipy.optimize as opt
 import plotDecisionBoundary
 
-data = np.loadtxt(r"E:\ml\exercise\w3\python\ex2data1.txt",delimiter = ",")
+data = np.loadtxt("ex2data1.txt",delimiter = ",")
 X = data[:, 0:2]
 y = data[:, 2]
 
