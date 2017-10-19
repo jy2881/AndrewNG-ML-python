@@ -14,4 +14,5 @@ def predictOneVsAll(all_theta, X):
     for i in range(0,m):
         maxVal = np.max(temp[i])
         p[i] = np.where(temp[i]==maxVal)
+        p[i] += 1
     return p

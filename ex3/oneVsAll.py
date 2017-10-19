@@ -16,6 +16,5 @@ def oneVsAll(X,y,num_labels,xlambda):
     initial_theta = np.zeros([n+1,1])
     for c in range(1,num_labels+1):
         judgement = (y == c)
-        all_theta[c:] = sop.minimize(fun=lrCostFunction.lrCostFunction,x0=initial_theta,args=(X,judgement, xlambda),method='TNC',jac=True,tol=1e-6).x
-        # sop.fmin_cg(lrCostFunction.compute_cost_reg,fprime=lrCostFunction.compute_grad_reg,x0=initial_theta.T,args=(X,judgement,xlambda),disp = 0)
+        all_theta[c-1:] = sop.minimize(fun=lrCostFunction.lrCostFunction,x0=initial_theta,args=(X,judgement, xlambda),method='TNC',jac=True,tol=1e-6).x
     return all_theta

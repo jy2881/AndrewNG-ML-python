@@ -51,7 +51,7 @@ rp = np.random.choice(m,m)
 
 for i in rp:
     print('Displaying Example Image')
-    displayData.displayData(X[i,:].reshape(1,n),20)
+    displayData.displayData(X[i,:].reshape(1,n),20) # Manually type the width 20
 
     pred = predict.predict(Theta1,Theta2,X[i,:].reshape(1,n))
     print('Neural Network Prediction: %d'%int(pred[0]))

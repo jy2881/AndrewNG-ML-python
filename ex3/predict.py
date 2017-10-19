@@ -20,4 +20,5 @@ def predict(Theta1,Theta2,X):
     for k in range(0,m):
         maxVal = np.max(a3[k,:])
         p[k] = np.where(a3[k,:]==maxVal)
+        p[k] += 1
     return p
