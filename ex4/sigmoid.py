@@ -5,5 +5,5 @@ import numpy as np
 
 def sigmoid(z):
     g = np.zeros(np.shape(z))
-    g = 1/(1+np.exp(-z))
+    g = 1.0/(1.0+np.exp(-z))
     return g

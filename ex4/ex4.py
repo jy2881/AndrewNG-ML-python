@@ -5,6 +5,9 @@ import numpy as np
 import scipy.io as sco
 import displayData
 import nnCostFunction
+import sigmoidGradient
+import randInitializeWeights
+import checkNNGradients
 
 
 # Setup the parameters you will use for this exercise
@@ -58,4 +61,98 @@ J = nnCostFunction.nnCostFunction(nn_params, input_layer_size, hidden_layer_size
 
 print('Cost at parameters (loaded from ex4weights): %.6f(this value should be about 0.287629)'%J)
 input('Program paused. Press enter to continue.')
+
+## =============== Part 4: Implement Regularization ===============
+#  Once your cost function implementation is correct, you should now continue to implement the regularization with the cost.
+
+print('Checking Cost Function (w/ Regularization) ... ')
+
+# Weight regularization parameter (we set this to 1 here).
+xlambda = 1
+J = nnCostFunction.regularization(nn_params, input_layer_size, hidden_layer_size, num_labels, X, y, xlambda)
+
+print('Cost at parameters (loaded from ex4weights): %f(this value should be about 0.383770)'%J)
+input('Program paused. Press enter to continue.')
+
+## ================ Part 5: Sigmoid Gradient  ================
+#  Before you start implementing the neural network, you will first implement the gradient for the sigmoid function.
+#  You should complete the code in the sigmoidGradient.m file.
+
+print('Evaluating sigmoid gradient...')
+
+g = sigmoidGradient.sigmoidGradient(np.array([-1,-0.5,0,0.5,1]))
+print('Sigmoid gradient evaluated at [-1 -0.5 0 0.5 1]:')
+for i in g:
+    print(i,end=" ")
+input('\nProgram paused. Press enter to continue.')
+
+## ================ Part 6: Initializing Pameters ================
+#  In this part of the exercise, you will be starting to implment a two layer neural network that classifies digits.
+#  You will start by implementing a function to initialize the weights of the neural network(randInitializeWeights.m)
+
+print('Initializing Neural Network Parameters ...')
+
+initial_Theta1 = randInitializeWeights.randInitializeWeights(input_layer_size, hidden_layer_size)
+initial_Theta2 = randInitializeWeights.randInitializeWeights(hidden_layer_size, num_labels)
+m1,n1 = np.shape(initial_Theta1)
+m2,n2 = np.shape(initial_Theta2)
+
+# Unroll parameters
+initial_nn_params = np.c_[initial_Theta1.ravel().reshape(m1*n1,1),initial_Theta2.ravel().reshape(m2*n2,1)]
+
+## =============== Part 7: Implement Backpropagation ===============
+#  Once your cost matches up with ours, you should proceed to implement the backpropagation algorithm
+#  for the neural network. You should add to the code you've written in nnCostFunction.m to
+#  return the partial derivatives of the parameters.
+
+print('Checking Backpropagation... ')
+
+#  Check gradients by running checkNNGradients
+checkNNGradients.checkNNGradients()
+
+input('Program paused. Press enter to continue.')
+
+## =============== Part 8: Implement Regularization ===============
+#  Once your backpropagation implementation is correct, you should now continue to
+#  implement the regularization with the cost and gradient.
+
+print('Checking Backpropagation (w/ Regularization) ... ')
+
+# Check gradients by running checkNNGradients
+xlambda = 3
+checkNNGradients(xlambda)
+
+# Also output the costFunction debugging values
+debug_J  = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, num_labels, X, y, xlambda)
+print('Cost at (fixed) debugging parameters (w/ lambda = %.8f): %.8f '
+      '\n(for lambda = 3, this value should be about 0.576051)'%(xlambda,debug_J))
+
+input('Program paused. Press enter to continue.')
+
+## =================== Part 8: Training NN ===================
+#  You have now implemented all the code necessary to train a neural network.
+#  To train your neural network, we will now use "fmincg", which is a function which works similarly to "fminunc".
+#  Recall that these advanced optimizers are able to train our cost functions efficiently as long as we provide them
+#  with the gradient computations.
+
+print('Training Neural Network... ')
+
+# You should also try different values of lambda
+xlambda = 1
+
+# Now, costFunction is a function that takes in only one argument (the neural network parameters)
+# costFunction = @(p) nnCostFunction(p, ...
+#                                    input_layer_size, ...
+#                                    hidden_layer_size, ...
+#                                    num_labels, X, y, lambda);
+#
+#
+# [nn_params, cost] = fmincg(costFunction, initial_nn_params, options);
+
+# Obtain Theta1 and Theta2 back from nn_params
+# Theta1 = nn_params[:hidden_layer_size * (input_layer_size + 1)].reshape(hidden_layer_size, (input_layer_size + 1))
+# Theta2 = nn_params[(1 + (hidden_layer_size * (input_layer_size + 1))):].reshape(num_labels, (hidden_layer_size + 1))
+#
+# input('Program paused. Press enter to continue.')
+
 
