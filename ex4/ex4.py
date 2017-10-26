@@ -8,6 +8,7 @@ import nnCostFunction
 import sigmoidGradient
 import randInitializeWeights
 import checkNNGradients
+import scipy.optimize as sop
 
 
 # Setup the parameters you will use for this exercise
@@ -141,18 +142,30 @@ print('Training Neural Network... ')
 xlambda = 1
 
 # Now, costFunction is a function that takes in only one argument (the neural network parameters)
-# costFunction = @(p) nnCostFunction(p, ...
-#                                    input_layer_size, ...
-#                                    hidden_layer_size, ...
-#                                    num_labels, X, y, lambda);
-#
-#
-# [nn_params, cost] = fmincg(costFunction, initial_nn_params, options);
+nn_params = sop.minimize(fun=nnCostFunction.regularization, x0=initial_nn_params,args=(input_layer_size,hidden_layer_size,num_labels, X, y, xlambda),method='TNC',jac=True,tol=1e-6).x
 
 # Obtain Theta1 and Theta2 back from nn_params
-# Theta1 = nn_params[:hidden_layer_size * (input_layer_size + 1)].reshape(hidden_layer_size, (input_layer_size + 1))
-# Theta2 = nn_params[(1 + (hidden_layer_size * (input_layer_size + 1))):].reshape(num_labels, (hidden_layer_size + 1))
-#
-# input('Program paused. Press enter to continue.')
+Theta1 = nn_params[:hidden_layer_size * (input_layer_size + 1)].reshape(hidden_layer_size, (input_layer_size + 1))
+Theta2 = nn_params[(hidden_layer_size * (input_layer_size + 1)):].reshape(num_labels, (hidden_layer_size + 1))
+
+input('Program paused. Press enter to continue...\n')
+
+## ================= Part 9: Visualize Weights =================
+#  You can now "visualize" what the neural network is learning by displaying the hidden units to see
+#  what features they are capturing in the data.
+
+print('Visualizing Neural Network... \n')
+displayData.displayData(Theta1[:,1:],20)
+input('Program paused. Press enter to continue.\n')
+
+## ================= Part 10: Implement Predict =================
+#  After training the neural network, we would like to use it to predict the labels.
+#  You will now implement the "predict" function to use the neural network to predict the labels of the training set.
+#  This lets you compute the training set accuracy.
+
+pred = predict(Theta1, Theta2, X)
+acc = np.mean(np.mean((pred==y)*100))
+print('Training Set Accuracy: %.4f'%acc)
+
 
 
