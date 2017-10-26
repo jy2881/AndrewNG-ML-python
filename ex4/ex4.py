@@ -57,7 +57,7 @@ print('Feedforward Using Neural Network ...')
 
 # Weight regularization parameter (we set this to 0 here).
 xlambda = 0
-J = nnCostFunction.nnCostFunction(nn_params, input_layer_size, hidden_layer_size,num_labels, X, y, xlambda)
+J,grad = nnCostFunction.nnCostFunction(nn_params, input_layer_size, hidden_layer_size,num_labels, X, y, xlambda)
 
 print('Cost at parameters (loaded from ex4weights): %.6f(this value should be about 0.287629)'%J)
 input('Program paused. Press enter to continue.')
@@ -69,7 +69,7 @@ print('Checking Cost Function (w/ Regularization) ... ')
 
 # Weight regularization parameter (we set this to 1 here).
 xlambda = 1
-J = nnCostFunction.regularization(nn_params, input_layer_size, hidden_layer_size, num_labels, X, y, xlambda)
+J,grad = nnCostFunction.regularization(nn_params, input_layer_size, hidden_layer_size, num_labels, X, y, xlambda)
 
 print('Cost at parameters (loaded from ex4weights): %f(this value should be about 0.383770)'%J)
 input('Program paused. Press enter to continue.')
@@ -90,7 +90,7 @@ input('\nProgram paused. Press enter to continue.')
 #  In this part of the exercise, you will be starting to implment a two layer neural network that classifies digits.
 #  You will start by implementing a function to initialize the weights of the neural network(randInitializeWeights.m)
 
-print('Initializing Neural Network Parameters ...')
+print('Initializing Neural Network Parameters ...\n')
 
 initial_Theta1 = randInitializeWeights.randInitializeWeights(input_layer_size, hidden_layer_size)
 initial_Theta2 = randInitializeWeights.randInitializeWeights(hidden_layer_size, num_labels)
@@ -98,14 +98,14 @@ m1,n1 = np.shape(initial_Theta1)
 m2,n2 = np.shape(initial_Theta2)
 
 # Unroll parameters
-initial_nn_params = np.c_[initial_Theta1.ravel().reshape(m1*n1,1),initial_Theta2.ravel().reshape(m2*n2,1)]
+initial_nn_params = np.r_[(initial_Theta1.ravel().reshape(m1*n1,1),initial_Theta2.ravel().reshape(m2*n2,1))]
 
 ## =============== Part 7: Implement Backpropagation ===============
 #  Once your cost matches up with ours, you should proceed to implement the backpropagation algorithm
 #  for the neural network. You should add to the code you've written in nnCostFunction.m to
 #  return the partial derivatives of the parameters.
 
-print('Checking Backpropagation... ')
+print('Checking Backpropagation... \n')
 
 #  Check gradients by running checkNNGradients
 checkNNGradients.checkNNGradients()
@@ -116,15 +116,15 @@ input('Program paused. Press enter to continue.')
 #  Once your backpropagation implementation is correct, you should now continue to
 #  implement the regularization with the cost and gradient.
 
-print('Checking Backpropagation (w/ Regularization) ... ')
+print('Checking Backpropagation (w/ Regularization) ...\n ')
 
 # Check gradients by running checkNNGradients
 xlambda = 3
-checkNNGradients(xlambda)
+checkNNGradients.checkNNGradients(xlambda)
 
 # Also output the costFunction debugging values
-debug_J  = nnCostFunction(nn_params, input_layer_size, hidden_layer_size, num_labels, X, y, xlambda)
-print('Cost at (fixed) debugging parameters (w/ lambda = %.8f): %.8f '
+debug_J,degub_grad  = nnCostFunction.regularization(nn_params, input_layer_size, hidden_layer_size, num_labels, X, y, xlambda)
+print('Cost at (fixed) debugging parameters (w/ lambda = %.2f): %.8f '
       '\n(for lambda = 3, this value should be about 0.576051)'%(xlambda,debug_J))
 
 input('Program paused. Press enter to continue.')
