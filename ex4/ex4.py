@@ -9,6 +9,8 @@ import sigmoidGradient
 import randInitializeWeights
 import checkNNGradients
 import scipy.optimize as sop
+import time
+import predict
 
 
 # Setup the parameters you will use for this exercise
@@ -137,7 +139,7 @@ input('Program paused. Press enter to continue.')
 #  with the gradient computations.
 
 print('Training Neural Network... ')
-
+print("Start at:",time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
 # You should also try different values of lambda
 xlambda = 1
 
@@ -147,7 +149,7 @@ nn_params = sop.minimize(fun=nnCostFunction.regularization, x0=initial_nn_params
 # Obtain Theta1 and Theta2 back from nn_params
 Theta1 = nn_params[:hidden_layer_size * (input_layer_size + 1)].reshape(hidden_layer_size, (input_layer_size + 1))
 Theta2 = nn_params[(hidden_layer_size * (input_layer_size + 1)):].reshape(num_labels, (hidden_layer_size + 1))
-
+print("End at:",time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))
 input('Program paused. Press enter to continue...\n')
 
 ## ================= Part 9: Visualize Weights =================
@@ -160,10 +162,10 @@ input('Program paused. Press enter to continue.\n')
 
 ## ================= Part 10: Implement Predict =================
 #  After training the neural network, we would like to use it to predict the labels.
-#  You will now implement the "predict" function to use the neural network to predict the labels of the training set.
+#  You will now implement the pred function to use the neural network to predict the labels of the training set.
 #  This lets you compute the training set accuracy.
 
-pred = predict(Theta1, Theta2, X)
+pred = predict.predict(Theta1, Theta2, X)
 acc = np.mean(np.mean((pred==y)*100))
 print('Training Set Accuracy: %.4f'%acc)
 
