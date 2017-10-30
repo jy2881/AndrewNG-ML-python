@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import plot
 import linearRegCostFunction as lRCF
 import trainLinearReg as tLR
+import learningCurve as lC
 
 ## =========== Part 1: Loading and Visualizing Data =============
 #  We start the exercise by first loading and visualizing the dataset. The following code will load
@@ -23,7 +24,6 @@ m = X.shape[0]
 # Plot training data
 plt = plot.plotNormal(X,y)
 plt.show()
-input('Program paused. Press enter to continue.\n')
 
 ## =========== Part 2: Regularized Linear Regression Cost =============
 #  You should now implement the cost function for regularized linear regression.
@@ -55,5 +55,19 @@ y_pred = np.dot(np.c_[(np.ones([m, 1]),X)],theta)
 plt.plot(X, y_pred, color='b')
 plt.show()
 
-input('Program paused. Press enter to continue.\n')
+# =========== Part 5: Learning Curve for Linear Regression =============
+#  Next, you should implement the learningCurve function.
+#  Write Up Note: Since the model is underfitting the data, we expect to see a graph with "high bias" -- Figure 3 in ex5.pdf
 
+xlambda = 0
+error_train,error_val = lC.learningCurve(np.c_[(np.ones([m,1]),X)],y,np.c_[np.ones([Xval.shape[0],1]),Xval],yval,xlambda)
+
+# plot the learning curve
+plt = plot.plotLC(np.arange(1,m+1), error_train, np.arange(1,m+1), error_val)
+plt.show()
+
+# print the contrast between training error and CV error
+print('# Training Examples\tTrain Error\tCross Validation Error')
+for i in range(0,m):
+    print(' \t%d\t\t%.4f\t%.4f'%(i,error_train[i],error_val[i]))
+input('Program paused. Press enter to continue.\n')
