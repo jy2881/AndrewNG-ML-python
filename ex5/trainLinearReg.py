@@ -7,7 +7,7 @@ import linearRegCostFunction as lRCF
 
 def trainLinearReg(X,y,xlambda):
     # Initialize Theta
-    initial_theta = np.zeros([X.shape[1],1]).reshape(2,1)
+    initial_theta = np.zeros([X.shape[1],1]).reshape(X.shape[1],1)
 
     # Start
     theta = sop.minimize(fun=lRCF.linearRegCostFunction,x0=initial_theta,args=(X,y,xlambda),method='TNC',jac=True,tol=1e-6).x

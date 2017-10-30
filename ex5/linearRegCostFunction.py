@@ -9,8 +9,8 @@ def linearRegCostFunction(theta,X,y,xlambda):
 
     # zero initial
     J = 0
-    grad = np.zeros(np.shape(theta)).reshape(2,1)
-    theta = theta.reshape(2,1)
+    grad = np.zeros(np.shape(theta)).reshape(n,1)
+    theta = theta.reshape(n,1)
 
     # start here
     J = 1/2/m*np.sum(np.square(np.dot(X,theta)-y)) + xlambda/2/m*np.sum(np.square(theta[1:,:]))

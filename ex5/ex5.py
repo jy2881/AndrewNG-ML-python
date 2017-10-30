@@ -8,6 +8,8 @@ import plot
 import linearRegCostFunction as lRCF
 import trainLinearReg as tLR
 import learningCurve as lC
+import featureNormalize
+import polyFeatures
 
 ## =========== Part 1: Loading and Visualizing Data =============
 #  We start the exercise by first loading and visualizing the dataset. The following code will load
@@ -70,4 +72,61 @@ plt.show()
 print('# Training Examples\tTrain Error\tCross Validation Error')
 for i in range(0,m):
     print(' \t%d\t\t%.4f\t%.4f'%(i,error_train[i],error_val[i]))
+input('Program paused. Press enter to continue.\n')
+
+## =========== Part 6: Feature Mapping for Polynomial Regression =============
+#  One solution to this is to use polynomial regression. You should now
+#  complete polyFeatures to map each example into its powers
+
+p = 8
+# Map X onto Polynomial Features and Normalize
+X_poly = polyFeatures.polyFeatures(X, p)
+X_poly,mu,sigma = featureNormalize.featureNormalize(X_poly)  # Normalize
+X_poly = np.c_[(np.ones([m,1]), X_poly)]                  # Add Ones row
+
+# Map X_poly_test and normalize (using mu and sigma)
+X_poly_test = polyFeatures.polyFeatures(Xtest, p)
+X_poly_test = X_poly_test-mu
+X_poly_test = X_poly_test/sigma
+X_poly_test = np.c_[(np.ones([X_poly_test.shape[0], 1]), X_poly_test)]         # Add Ones
+
+# Map X_poly_val and normalize (using mu and sigma)
+X_poly_val = polyFeatures.polyFeatures(Xval, p)
+X_poly_val = X_poly_val-mu
+X_poly_val = X_poly_val-sigma
+X_poly_val = np.c_[(np.ones([X_poly_val.shape[0], 1]), X_poly_val)]           # Add Ones
+
+print('Normalized Training Example 1:\n')
+for i in X_poly[0,:]:
+    print(i,end=" ")
+
+input('\nProgram paused. Press enter to continue.\n')
+
+## =========== Part 7: Learning Curve for Polynomial Regression =============
+#  Now, you will get to experiment with polynomial regression with multiple values of xlambda.
+#  The code below runs polynomial regression with xlambda = 0. You should try running the code with different
+#  values of xlambda to see how the fit and learning curve change.
+
+xlambda = 0
+theta = tLR.trainLinearReg(X_poly, y, xlambda)
+
+# Plot training data and fit
+plt = plot.plotFit(X,y,mu, sigma, theta, p,xlambda)
+plt.show()
+
+# figure(2);
+# [error_train, error_val] = learningCurve(X_poly, y, X_poly_val, yval, lambda)
+# plot(1:m, error_train, 1:m, error_val)
+#
+# title(sprintf('Polynomial Regression Learning Curve (lambda = %f)', lambda))
+# xlabel('Number of training examples')
+# ylabel('Error')
+# axis([0 13 0 100])
+# legend('Train', 'Cross Validation')
+#
+# fprintf('Polynomial Regression (lambda = %f)\n\n', lambda)
+# fprintf('# Training Examples\tTrain Error\tCross Validation Error\n')
+# for i in range(0,m):
+#     print('  \t%d\t\t%f\t%f\n', i, error_train(i), error_val(i))
+
 input('Program paused. Press enter to continue.\n')
