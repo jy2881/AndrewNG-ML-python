@@ -38,6 +38,6 @@ def plotFit(X,y,mu, sigma, theta, p,xlambda):
     X_poly = np.c_[(np.ones([x.shape[0], 1]),X_poly)]
 
     # Plot
-    plt.plot(x,X_poly*theta,color='b')
+    plt.plot(x,np.dot(X_poly,theta),color='b')
 
     return plt

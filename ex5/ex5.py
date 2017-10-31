@@ -96,7 +96,7 @@ X_poly_val = X_poly_val-mu
 X_poly_val = X_poly_val-sigma
 X_poly_val = np.c_[(np.ones([X_poly_val.shape[0], 1]), X_poly_val)]           # Add Ones
 
-print('Normalized Training Example 1:\n')
+print('Normalized Training Example 1:')
 for i in X_poly[0,:]:
     print(i,end=" ")
 
@@ -111,22 +111,16 @@ xlambda = 0
 theta = tLR.trainLinearReg(X_poly, y, xlambda)
 
 # Plot training data and fit
-plt = plot.plotFit(X,y,mu, sigma, theta, p,xlambda)
-plt.show()
+f1 = plot.plotFit(X,y,mu,sigma,theta,p,xlambda)
+f1.show()
 
-# figure(2);
-# [error_train, error_val] = learningCurve(X_poly, y, X_poly_val, yval, lambda)
-# plot(1:m, error_train, 1:m, error_val)
-#
-# title(sprintf('Polynomial Regression Learning Curve (lambda = %f)', lambda))
-# xlabel('Number of training examples')
-# ylabel('Error')
-# axis([0 13 0 100])
-# legend('Train', 'Cross Validation')
-#
-# fprintf('Polynomial Regression (lambda = %f)\n\n', lambda)
-# fprintf('# Training Examples\tTrain Error\tCross Validation Error\n')
-# for i in range(0,m):
-#     print('  \t%d\t\t%f\t%f\n', i, error_train(i), error_val(i))
+error_train, error_val = lC.learningCurve(X_poly,y,X_poly_val,yval,xlambda)
+f2 = plot.plotLC(np.arange(1,m+1),error_train,np.arange(1,m+1),error_val)
+f2.title('Polynomial Regression Learning Curve (xlambda = %.2f)'%xlambda)
+f2.show()
+print('Polynomial Regression (lambda = %.2f)'%xlambda)
+print('# Training Examples\tTrain Error\tCross Validation Error\n')
+for i in range(0,m):
+    print('  \t%d\t\t%.4f\t%.4f'%(i,error_train[i],error_val[i]))
 
 input('Program paused. Press enter to continue.\n')
