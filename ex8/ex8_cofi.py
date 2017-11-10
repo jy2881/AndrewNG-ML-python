@@ -6,6 +6,9 @@ import scipy.io as sco
 import matplotlib.pyplot as plt
 import cofiCostFunc as cCF
 import checkCostFunction
+import loadMovieList
+import math
+import normalizeRatings as nR
 
 print('Loading movie ratings dataset.\n\n')
 ex8_movies = sco.loadmat("ex8_movies.mat")
@@ -52,3 +55,104 @@ print('\nChecking Gradients (without regularization) ... \n')
 checkCostFunction.checkCostFunction(1.5)
 
 input('\nProgram paused. Press enter to continue.\n')
+
+## ========= Part 4: Collaborative Filtering Cost Regularization ========
+#  Now, you should implement regularization for the cost function for collaborative filtering.
+#  You can implement it by adding the cost of regularization to the original cost computation.
+
+#  Evaluate cost function
+nn_params = np.r_[(X.ravel().reshape(num_movies*num_features,1),Theta.ravel().reshape(num_users*num_features,1))]
+J,grad = cCF.cofiCostFunc(nn_params,Y,R,num_users,num_movies,num_features,1.5)
+
+print('Cost at loaded parameters (lambda = 1.5): %f(this value should be about 31.34)\n'%J)
+input('\nProgram paused. Press enter to continue.\n')
+
+## ======= Part 5: Collaborative Filtering Gradient Regularization ======
+#  Once your cost matches up with ours, you should proceed to implement regularization for the gradient.
+
+print('\nChecking Gradients (with regularization) ... \n')
+#  Check gradients by running checkNNGradients
+checkCostFunction.checkCostFunction(1.5)
+input('\nProgram paused. Press enter to continue.\n')
+
+## ============== Part 6: Entering ratings for a new user ===============
+#  Before we will train the collaborative filtering model, we will first add ratings that correspond
+#  to a new user that we just observed. This part of the code will also allow you to put in your
+#  own ratings for the movies in our dataset!
+
+movieList = loadMovieList.loadMovieList()
+
+#  Initialize my ratings
+my_ratings = np.zeros([1682,1])
+
+# Check the file movie_idx.txt for id of each movie in our dataset
+#For example, Toy Story (1995) has ID 1, so to rate it "4", you can set
+my_ratings[1-1] = 4
+
+# Or suppose did not enjoy Silence of the Lambs (1991), you can set
+my_ratings[98-1] = 2
+
+# We have selected a few movies we liked / did not like and the ratings we gave are as follows:
+my_ratings[7-1] = 3
+my_ratings[12-1]= 5
+my_ratings[54-1] = 4
+my_ratings[64-1] = 5
+my_ratings[66-1] = 3
+my_ratings[69-1] = 5
+my_ratings[183-1] = 4
+my_ratings[226-1] = 5
+my_ratings[355-1] = 5
+
+print('\nNew user ratings:\n')
+for i in range(0,len(my_ratings)):
+    if my_ratings[i] > 0:
+        print('Rated %d for %s'%(my_ratings[i],movieList[i]),end="")
+
+input('\nProgram paused. Press enter to continue.\n')
+
+## ================== Part 7: Learning Movie Ratings ====================
+#  Now, you will train the collaborative filtering model on a movie rating dataset of 1682 movies and 943 users
+
+print('\nTraining collaborative filtering...\n')
+
+#  Load data
+ex8_movies = sco.loadmat('ex8_movies.mat')
+R,Y = ex8_movies["R"],ex8_movies["Y"]
+#  Y is a 1682x943 matrix, containing ratings (1-5) of 1682 movies by 943 users
+#  R is a 1682x943 matrix, where R(i,j) = 1 if and only if user j gave a rating to movie i
+
+#  Add our own ratings to the data matrix
+Y = np.c_[(my_ratings,Y)]
+R = np.c_[(np.ceil(my_ratings/5),R)]
+
+#  Normalize Ratings
+Ynorm, Ymean = nR.normalizeRatings(Y, R)
+
+#  Useful Values
+num_users = Y.shape[1]
+num_movies = Y.shape[0]
+num_features = 10
+
+# Set Initial Parameters (Theta, X)
+X = np.random.randn(num_movies, num_features)
+Theta = np.random.randn(num_users, num_features)
+
+initial_parameters=np.r_[(X.ravel().reshape(num_movies*num_features,1),Theta.ravel().reshape(num_users*num_features,1))]
+
+# # Set options for fmincg
+# options = optimset('GradObj', 'on', 'MaxIter', 100);
+#
+# % Set Regularization
+# lambda = 10;
+# theta = fmincg (@(t)(cofiCostFunc(t, Ynorm, R, num_users, num_movies, ...
+#                                 num_features, lambda)), ...
+#                 initial_parameters, options);
+
+
+
+# % Unfold the returned theta back into U and W
+# X = reshape(theta(1:num_movies*num_features), num_movies, num_features);
+# Theta = reshape(theta(num_movies*num_features+1:end), ...
+#                 num_users, num_features);
+
+input('Recommender system learning completed.\nProgram paused. Press enter to continue.\n')
