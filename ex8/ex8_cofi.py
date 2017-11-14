@@ -9,6 +9,7 @@ import checkCostFunction
 import loadMovieList
 import math
 import normalizeRatings as nR
+import scipy.optimize as sop
 
 print('Loading movie ratings dataset.\n\n')
 ex8_movies = sco.loadmat("ex8_movies.mat")
@@ -138,21 +139,38 @@ X = np.random.randn(num_movies, num_features)
 Theta = np.random.randn(num_users, num_features)
 
 initial_parameters=np.r_[(X.ravel().reshape(num_movies*num_features,1),Theta.ravel().reshape(num_users*num_features,1))]
+xlambda = 10
 
-# # Set options for fmincg
-# options = optimset('GradObj', 'on', 'MaxIter', 100);
-#
-# % Set Regularization
-# lambda = 10;
-# theta = fmincg (@(t)(cofiCostFunc(t, Ynorm, R, num_users, num_movies, ...
-#                                 num_features, lambda)), ...
-#                 initial_parameters, options);
+theta = sop.minimize(fun=cCF.cofiCostFunc,x0=initial_parameters,
+                     args=(Ynorm,R,num_users,num_movies,num_features,xlambda),
+                     method='TNC',jac=True,tol=1e-6,options={'maxiter':100, "disp":True}).x
 
-
-
-# % Unfold the returned theta back into U and W
-# X = reshape(theta(1:num_movies*num_features), num_movies, num_features);
-# Theta = reshape(theta(num_movies*num_features+1:end), ...
-#                 num_users, num_features);
+# Unfold the returned theta back into U and W
+X = theta[:num_movies*num_features].reshape(num_movies,num_features)
+Theta = theta[num_movies*num_features:].reshape(num_users,num_features)
 
 input('Recommender system learning completed.\nProgram paused. Press enter to continue.\n')
+
+## ================== Part 8: Recommendation for you ====================
+#  After training the model, you can now make recommendations by computing the predictions matrix.
+
+p = np.dot(X,Theta.T)
+my_predictions = p[:,0].reshape(num_movies,1) + Ymean.reshape(num_movies,1)
+my_predictions = my_predictions[:,0]
+
+movieList = loadMovieList.loadMovieList()
+
+my_pred_sort = np.sort(-my_predictions)
+my_ix = np.argsort(-my_predictions)
+
+print('\nTop recommendations for you:\n')
+for i in range(0,10):
+    j = int(my_ix[i])
+    print('Predicting rating %.1f for movie %s'%(my_predictions[j],movieList[j]),end="")
+# print("my_predictions",my_predictions[:20])
+# print("p",p[:20,0])
+
+# print('\nOriginal ratings provided:\n')
+# for i in range(0,len(my_ratings)):
+#     if my_ratings[i] > 0:
+#         print('Rated %d for %s'%(my_predictions[j],movieList[j]),end="")
